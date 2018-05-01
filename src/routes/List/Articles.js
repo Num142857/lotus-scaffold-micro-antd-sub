@@ -14,7 +14,7 @@ const pageSize = 5;
 @Form.create()
 export default class SearchList extends Component {
   componentDidMount() {
-    this.fetchMore();
+    // this.fetchMore();
   }
 
   setOwner = () => {
@@ -25,12 +25,12 @@ export default class SearchList extends Component {
   };
 
   fetchMore = () => {
-    this.props.dispatch({
-      type: 'list/appendFetch',
-      payload: {
-        count: pageSize,
-      },
-    });
+    // this.props.dispatch({
+    //   type: 'list/appendFetch',
+    //   payload: {
+    //     count: pageSize,
+    //   },
+    // });
   };
 
   render() {
