@@ -17,7 +17,7 @@ const reactLifecycles = singleSpaReact({
   rootComponent: (spa) => {
     return <RootComponent store={spa.customProps.store.storeInstance} globalEventDistributor={spa.customProps.globalEventDistributor} />
   },
-  domElementGetter: () => document.getElementById('root')
+  domElementGetter: () => document.getElementById('sub-module')
 })
 
 export const bootstrap = [
