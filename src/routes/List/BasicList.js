@@ -37,7 +37,7 @@ export default class BasicList extends PureComponent {
     const { list: { list }, loading } = this.props;
 
     const Info = ({ title, value, bordered }) => (
-      <div className={styles.headerInfo}>
+      <div className={'headerInfo'}>
         <span>{title}</span>
         <p>{value}</p>
         {bordered && <em />}
@@ -45,13 +45,13 @@ export default class BasicList extends PureComponent {
     );
 
     const extraContent = (
-      <div className={styles.extraContent}>
+      <div className={'extraContent'}>
         <RadioGroup defaultValue="all">
           <RadioButton value="all">全部</RadioButton>
           <RadioButton value="progress">进行中</RadioButton>
           <RadioButton value="waiting">等待中</RadioButton>
         </RadioGroup>
-        <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
+        <Search className={'extraContentSearch'} placeholder="请输入" onSearch={() => ({})} />
       </div>
     );
 
@@ -63,16 +63,16 @@ export default class BasicList extends PureComponent {
     };
 
     const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
-      <div className={styles.listContent}>
-        <div className={styles.listContentItem}>
+      <div className={'listContent'}>
+        <div className={'listContentItem'}>
           <span>Owner</span>
           <p>{owner}</p>
         </div>
-        <div className={styles.listContentItem}>
+        <div className={'listContentItem'}>
           <span>开始时间</span>
           <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
         </div>
-        <div className={styles.listContentItem}>
+        <div className={'listContentItem'}>
           <Progress percent={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
         </div>
       </div>
@@ -99,7 +99,7 @@ export default class BasicList extends PureComponent {
 
     return (
       <PageHeaderLayout>
-        <div className={styles.standardList}>
+        <div className={'standardList'}>
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
@@ -115,7 +115,7 @@ export default class BasicList extends PureComponent {
           </Card>
 
           <Card
-            className={styles.listCard}
+            className={'listCard'}
             bordered={false}
             title="标准列表"
             style={{ marginTop: 24 }}

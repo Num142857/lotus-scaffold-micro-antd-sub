@@ -159,7 +159,7 @@ export default class BasicLayout extends React.PureComponent {
 
           ))}
           <Redirect exact from='/' to={bashRedirect} />
-          {/* <Route render={NotFound} /> */}
+          <Route render={NotFound} />
         </Switch>
       )
 

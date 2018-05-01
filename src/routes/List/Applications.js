@@ -20,7 +20,7 @@ const formatWan = val => {
     result = (
       <span>
         {result}
-        <em className={styles.wan}>万</em>
+        <em className={'wan'}>万</em>
       </span>
     );
   }
@@ -62,7 +62,7 @@ export default class FilterCardList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const CardInfo = ({ activeUser, newUser }) => (
-      <div className={styles.cardInfo}>
+      <div className={'cardInfo'}>
         <div>
           <p>活跃用户</p>
           <p>{activeUser}</p>
@@ -102,7 +102,7 @@ export default class FilterCardList extends PureComponent {
     );
 
     return (
-      <div className={styles.filterCardList}>
+      <div className={'filterCardList'}>
         <Card bordered={false}>
           <Form layout="inline">
             <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
@@ -185,7 +185,7 @@ export default class FilterCardList extends PureComponent {
                 ]}
               >
                 <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />
-                <div className={styles.cardItemContent}>
+                <div className={'cardItemContent'}>
                   <CardInfo
                     activeUser={formatWan(item.activeUser)}
                     newUser={numeral(item.newUser).format('0,0')}

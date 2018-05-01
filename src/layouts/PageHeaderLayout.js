@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import styles from './PageHeaderLayout.less'
 
+if (process.env.NODE_ENV !== 'production'){
+ var wrapperStyle = { 'margin': '-24px -24px 0px' }
+}
 export default ({ children, wrapperClassName, top, ...restProps }) => (
-  <div className={wrapperClassName}>
+  <div style={wrapperStyle||{}} className={wrapperClassName}>
     {top}
     {console.log(restProps)}
     <PageHeader key='pageheader' {...restProps} linkElement={Link} />
