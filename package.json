@@ -40,6 +40,7 @@
     "file-loader": "1.1.5",
     "fs-extra": "^3.0.1",
     "handlebars": "^4.0.11",
+    "history": "^4.7.2",
     "html-webpack-plugin": "2.29.0",
     "inquirer": "^5.2.0",
     "install": "^0.11.0",
@@ -128,7 +129,7 @@
   },
   "registerConfig": {
     "name": "lotus-scaffold-micro-antd-sub",
-    "path":"/list",
+    "path": "/list",
     "prefix": "/lotus-scaffold-micro-antd-sub/",
     "main": "/lotus-scaffold-micro-antd-sub/main.js",
     "store": "/lotus-scaffold-micro-antd-sub/store.js"
