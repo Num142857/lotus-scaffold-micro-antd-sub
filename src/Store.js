@@ -5,7 +5,6 @@ const initialState = {
   refresh: 0
 }
 
-
 let menuDate = [
   {
     name: '列表页',
