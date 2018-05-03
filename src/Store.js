@@ -46,6 +46,7 @@ let menuDate = [
   }, {
     rank: 4,
     name: '搜索列表（应用）',
+    icon: 'table',
     path: 'applications',
   }
 ]
