@@ -1,5 +1,15 @@
 import { createStore, combineReducers } from 'redux'
 import menuDate from "./common/menu"
+import createHistory from 'history/createBrowserHistory'
+const history = createHistory()
+const location = history.location
+history.listen(function (location, action) {
+  // youAreHere.textContent = location.pathname
+  console.log("网址改变了,我这里已经知道")
+  console.log(location, action)
+
+})
+
 const initialState = { 
   count: 0,
   refresh: 0
@@ -32,4 +42,10 @@ function menu(){
   return menuDate
 }
 
-export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, reducer}))
+function to(state,action){
+  if (action.type === 'to'){
+    return history.push(action.path)
+  }
+}
+
+export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, reducer, to}))

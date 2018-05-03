@@ -12,24 +12,14 @@ import {
   Redirect
 } from 'react-router-dom'
 import { getRouterData } from './common/router'
-import createHistory from 'history/createBrowserHistory'
-const history = createHistory()
-const location = history.location
-history.listen(function (location, action) {
-  // youAreHere.textContent = location.pathname
-  console.log("网址改变了,我这里已经知道")
-  console.log(location, action)
-  
-})
+
 export default class RootComponent extends React.Component {
     state = { store: this.props.store, globalEventDistributor: this.props.globalEventDistributor };
 
     componentDidCatch(error, info) {
       console.log(error, info)
     }
-    componentWillMount(){
-
-    }
+    componentWillMount(){}
 
     setStore(store) {
       this.setState({ ...this.state, store: store })
@@ -47,16 +37,14 @@ export default class RootComponent extends React.Component {
       console.log(this.props)
       if (this.state.store && this.state.globalEventDistributor) {
         ret = <Provider store={this.state.store}>
-          < HashRouter history = {
-            history
-          } >
+          <BrowserRouter >
             <Switch>
               <Route  render={props => <BasicLayout {...customProps} {...props} />} />
             </Switch>          
-          </HashRouter>
+          </BrowserRouter>
 
         </Provider>
       }
       return ret
     }
-}``
+}
