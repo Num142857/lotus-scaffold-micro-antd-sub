@@ -1,7 +1,6 @@
 import { createStore, combineReducers } from 'redux'
 
-const initialState = {
-  namespace: 'base', // 全局Store的命名空间,每个项目必须不一样.请记得修改
+const initialState = { 
   count: 0,
   refresh: 0
 }
@@ -72,4 +71,4 @@ function menu(){
   return menuDate
 }
 
-export const storeInstance = createStore(combineReducers({ menu, reducer}))
+export const storeInstance = createStore(combineReducers({ namespace: 'list', menu, reducer}))
