@@ -44,8 +44,9 @@ function menu(){
 
 function to(state,action){
   if (action.type === 'to'){
-    return history.push(action.path)
+    history.push(action.path)
   }
+  return {}
 }
 
 export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, reducer, to}))
