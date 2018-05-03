@@ -50,3 +50,4 @@ function to(state,action){
 }
 
 export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, reducer, to}))
+export { history }
