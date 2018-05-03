@@ -42,7 +42,6 @@ export default class RootComponent extends React.Component {
               <Route  render={props => <BasicLayout {...customProps} {...props} />} />
             </Switch>          
           </BrowserRouter>
-
         </Provider>
       }
       return ret
