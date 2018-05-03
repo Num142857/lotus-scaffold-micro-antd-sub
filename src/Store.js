@@ -5,7 +5,7 @@ const history = createHistory()
 const location = history.location
 history.listen(function (location, action) {
   // youAreHere.textContent = location.pathname
-  console.log("网址改变了,我这里已经知道")
+  console.log("网址改变了,sub已经知道")
   console.log(location, action)
 
 })
@@ -44,6 +44,7 @@ function menu(){
 
 function to(state,action){
   if (action.type === 'to'){
+    console.log('sub 准备push')
     history.push(action.path)
   }
   return {}
