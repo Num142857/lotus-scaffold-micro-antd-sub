@@ -46,6 +46,7 @@ function to(state,action){
   if (action.type !== 'to'){
    return {}
   }
+  history.push(action.path)
   console.log('sub 准备push')
   return { path: action.path }
 }

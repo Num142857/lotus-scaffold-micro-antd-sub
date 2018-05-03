@@ -15,7 +15,7 @@ const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
   rootComponent: (spa) => {
-    return <RootComponent store={spa.customProps.store.storeInstance} globalEventDistributor={spa.customProps.globalEventDistributor} />
+    return <RootComponent history={spa.customProps.store.history} store={spa.customProps.store.storeInstance} globalEventDistributor={spa.customProps.globalEventDistributor} />
   },
   domElementGetter: () => document.getElementById('sub-module')
 })

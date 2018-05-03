@@ -6,6 +6,7 @@ import UserLayout from './layouts/UserLayout'
 import {
   BrowserRouter,
   Route,
+  Router,
   HashRouter,
   hashHistory,
   Switch,
@@ -47,11 +48,11 @@ export default class RootComponent extends React.Component {
       console.log(this.props)
       if (this.state.store && this.state.globalEventDistributor) {
         ret = <Provider store={this.state.store}>
-          < BrowserRouter>
+          <Router history={this.props.history}>
             <Switch>
               <Route  render={props => <BasicLayout {...customProps} {...props} />} />
             </Switch>          
-          </BrowserRouter>
+          </Router>
 
         </Provider>
       }
