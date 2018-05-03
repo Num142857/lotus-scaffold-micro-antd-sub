@@ -10,6 +10,7 @@ let menuDate = [
     name: '列表页',
     icon: 'table',
     path: 'list',
+    rank:3,
     children: [
       {
         name: '查询表格',
@@ -43,6 +44,7 @@ let menuDate = [
       },
     ],
   }, {
+    rank: 4,
     name: '搜索列表（应用）',
     path: 'applications',
   }
