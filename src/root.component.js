@@ -4,23 +4,26 @@ import App from './models/example/App'
 import BasicLayout from './layouts/BasicLayout'
 import UserLayout from './layouts/UserLayout'
 import {
-  Router,
+  BrowserRouter,
   Route,
+  Router,
   HashRouter,
   hashHistory,
   Switch,
-  Redirect,
-  BrowserRouter
+  Redirect
 } from 'react-router-dom'
 import { getRouterData } from './common/router'
-
+import createHistory from 'history/createBrowserHistory'
+import { history} from '../src/Store'
 export default class RootComponent extends React.Component {
     state = { store: this.props.store, globalEventDistributor: this.props.globalEventDistributor };
 
     componentDidCatch(error, info) {
       console.log(error, info)
     }
-    componentWillMount(){}
+    componentWillMount(){
+
+    }
 
     setStore(store) {
       this.setState({ ...this.state, store: store })
@@ -38,11 +41,14 @@ export default class RootComponent extends React.Component {
       console.log(this.props)
       if (this.state.store && this.state.globalEventDistributor) {
         ret = <Provider store={this.state.store}>
-          <BrowserRouter>
+          <Router history = {
+            history
+          } >
             <Switch>
               <Route  render={props => <BasicLayout {...customProps} {...props} />} />
             </Switch>          
-          </BrowserRouter>
+          </Router>
+
         </Provider>
       }
       return ret
