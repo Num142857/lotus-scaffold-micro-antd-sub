@@ -8,6 +8,7 @@ const initialState = {
 
 
 let menuDate = {
+  namespace: 'menuDate',
   name: '列表页',
   icon: 'table',
   path: 'list',
