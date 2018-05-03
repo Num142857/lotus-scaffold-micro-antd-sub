@@ -72,4 +72,4 @@ function menu(){
   return menuDate
 }
 
-export const storeInstance = createStore(combineReducers(menu, reducer))
+export const storeInstance = createStore(combineReducers({ menu, reducer}))
