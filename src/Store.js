@@ -43,11 +43,11 @@ function menu(){
 }
 
 function to(state,action){
-  if (action.type === 'to'){
-    console.log('sub 准备push')
-    history.push(action.path)
+  if (action.type !== 'to'){
+   return {}
   }
-  return {}
+  console.log('sub 准备push')
+  return { path: action.path }
 }
 
 export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, reducer, to}))

@@ -6,7 +6,6 @@ import UserLayout from './layouts/UserLayout'
 import {
   BrowserRouter,
   Route,
-  Router,
   HashRouter,
   hashHistory,
   Switch,
@@ -14,7 +13,14 @@ import {
 } from 'react-router-dom'
 import { getRouterData } from './common/router'
 import createHistory from 'history/createBrowserHistory'
-import { history} from '../src/Store'
+const history = createHistory()
+const location = history.location
+history.listen(function (location, action) {
+  // youAreHere.textContent = location.pathname
+  console.log("网址改变了,我这里已经知道")
+  console.log(location, action)
+  
+})
 export default class RootComponent extends React.Component {
     state = { store: this.props.store, globalEventDistributor: this.props.globalEventDistributor };
 
@@ -41,13 +47,11 @@ export default class RootComponent extends React.Component {
       console.log(this.props)
       if (this.state.store && this.state.globalEventDistributor) {
         ret = <Provider store={this.state.store}>
-          <Router history = {
-            history
-          } >
+          < BrowserRouter>
             <Switch>
               <Route  render={props => <BasicLayout {...customProps} {...props} />} />
             </Switch>          
-          </Router>
+          </BrowserRouter>
 
         </Provider>
       }
