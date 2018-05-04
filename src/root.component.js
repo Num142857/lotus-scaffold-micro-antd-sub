@@ -19,12 +19,16 @@ export default class RootComponent extends React.Component {
     componentDidCatch(error, info) {
       console.log(error, info)
     }
-    componentWillMount(){
+    componentWillMount() {
+      let previousPath = ''
       this.props.history.listen(function (location, action) {
-        // youAreHere.textContent = location.pathname
-        console.log("网址改变了,sub2已经知道")
+        console.log('网址改变了,sub已经知道')
+        if (previousPath === location.pathname) return
+        console.log('前后网址不一样,准备跳转')
         console.log(location, action)
-
+        // 记录一下
+        previousPath = location.pathname
+        this.state.globalEventDistributor.dispatch({ type: 'to', path: location.pathname })
       })
     }
 
@@ -46,10 +50,9 @@ export default class RootComponent extends React.Component {
         ret = <Provider store={this.state.store}>
           <Router history={this.props.history}>
             <Switch>
-              <Route  render={props => <BasicLayout {...customProps} {...props} />} />
-            </Switch>          
+              <Route render={props => <BasicLayout {...customProps} {...props} />} />
+            </Switch>
           </Router>
-
         </Provider>
       }
       return ret
