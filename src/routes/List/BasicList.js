@@ -1,22 +1,7 @@
 import React, { PureComponent } from 'react'
 import moment from 'moment'
-import {
-  List,
-  Card,
-  Row,
-  Col,
-  Radio,
-  Input,
-  Progress,
-  Button,
-  Icon,
-  Dropdown,
-  Menu,
-  Avatar,
-} from 'antd'
-
+import { List, Card, Row, Col, Radio, Input, Progress, Button, Icon, Dropdown, Menu, Avatar } from 'antd'
 import PageHeaderLayout from '../../layouts/PageHeaderLayout'
-
 import styles from './BasicList.less'
 
 const RadioButton = Radio.Button
@@ -126,7 +111,7 @@ export default class BasicList extends PureComponent {
               pagination={paginationProps}
               dataSource={list}
               renderItem={item => (
-                <List.Item actions={[<a>编辑</a>, <MoreBtn />]}>
+                <List.Item actions={[<a key='1'>编辑</a>, <MoreBtn />]}>
                   <List.Item.Meta
                     avatar={<Avatar src={item.logo} shape='square' size='large' />}
                     title={<a href={item.href}>{item.title}</a>}

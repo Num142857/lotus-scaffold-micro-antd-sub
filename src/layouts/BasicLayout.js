@@ -145,8 +145,6 @@ export default class BasicLayout extends React.PureComponent {
       const { collapsed } = this.state
       const menus = getMenuData()
       const bashRedirect = this.getBashRedirect()
-      console.log(match)
-      console.log(this.props)
       const layout = (
         <Switch>
           {getRoutes(match.path, routerData).map(item => (

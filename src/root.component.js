@@ -28,6 +28,7 @@ export default class RootComponent extends React.Component {
         console.log(location, action)
         // 记录一下
         previousPath = location.pathname
+        // 当本项目发生push的时候,才开始通知其他项目页面需要跳转
         if (action === 'PUSH') { this.props.globalEventDistributor.dispatch({ type: 'to', path: location.pathname }) }
       })
     }
@@ -44,8 +45,6 @@ export default class RootComponent extends React.Component {
       let ret = <div></div>
       const routerData = getRouterData()
       let customProps = { routerData: routerData, globalEventDistributor: this.state.globalEventDistributor }
-      console.log(routerData)
-      console.log(this.props)
       if (this.state.store && this.state.globalEventDistributor) {
         ret = <Provider store={this.state.store}>
           <Router history={this.props.history}>
