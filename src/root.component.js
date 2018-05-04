@@ -20,16 +20,16 @@ export default class RootComponent extends React.Component {
       console.log(error, info)
     }
     componentWillMount() {
-      // let previousPath = ''
-      // this.props.history.listen((location, action) => {
-      //   console.log('网址改变了,sub已经知道')
-      //   if (previousPath === location.pathname) return
-      //   console.log('前后网址不一样,准备跳转')
-      //   console.log(location, action)
-      //   // 记录一下
-      //   previousPath = location.pathname
-      //   this.props.globalEventDistributor.dispatch({ type: 'to', path: location.pathname })
-      // })
+      let previousPath = ''
+      this.props.history.listen((location, action) => {
+        console.log('网址改变了,sub已经知道')
+        if (previousPath === location.pathname) return
+        console.log('前后网址不一样,准备跳转')
+        console.log(location, action)
+        // 记录一下
+        previousPath = location.pathname
+        if (action === 'PUSH') { this.props.globalEventDistributor.dispatch({ type: 'to', path: location.pathname }) }
+      })
     }
 
     setStore(store) {

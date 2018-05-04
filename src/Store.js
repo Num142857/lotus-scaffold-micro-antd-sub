@@ -23,11 +23,12 @@ function menu() {
   return menuDate
 }
 
-function to(state, action) {
-  if (action.type !== 'to' && action.owner !== 'base') return {}
+function to(state = initialState, action) {
+  console.log(action.type)
+  if (action.type !== 'to' && action.owner !== 'list') return { ...state, path: '/' }
   history.replace(action.path)
   console.log('sub 准备push')
-  return { path: action.path }
+  return { ...state, path: action.path }
 }
 
 export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, render, to }))
