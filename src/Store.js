@@ -24,12 +24,12 @@ function menu() {
 }
 
 function to(state, action) {
-  if (action.type === 'to') {
-    history.replace(action.path)
-    console.log('sub 准备push')
-    return { path: action.path }
+  if (action.type !== 'to') {
+    return {}
   }
-  return {}
+  history.replace(action.path)
+  console.log('sub 准备push')
+  return { path: action.path }
 }
 
 export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, render, to }))
