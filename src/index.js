@@ -17,7 +17,7 @@ const reactLifecycles = singleSpaReact({
   rootComponent: (spa) => {
     return <RootComponent history={spa.customProps.store.history} store={spa.customProps.store.storeInstance} globalEventDistributor={spa.customProps.globalEventDistributor} />
   },
-  domElementGetter: () => document.getElementById('sub-module')
+  domElementGetter: () => document.getElementById('sub-module') || document.querySelector('.ant-layout-content')
 })
 
 export const bootstrap = [
