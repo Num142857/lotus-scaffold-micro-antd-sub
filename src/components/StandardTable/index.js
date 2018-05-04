@@ -1,75 +1,75 @@
-import React, { PureComponent, Fragment } from 'react';
-import { Table, Alert } from 'antd';
-import styles from './index.less';
+import React, { PureComponent, Fragment } from 'react'
+import { Table, Alert } from 'antd'
+import styles from './index.less'
 
 function initTotalList(columns) {
-  const totalList = [];
+  const totalList = []
   columns.forEach(column => {
     if (column.needTotal) {
-      totalList.push({ ...column, total: 0 });
+      totalList.push({ ...column, total: 0 })
     }
-  });
-  return totalList;
+  })
+  return totalList
 }
 
 class StandardTable extends PureComponent {
   constructor(props) {
-    super(props);
-    const { columns } = props;
-    const needTotalList = initTotalList(columns);
+    super(props)
+    const { columns } = props
+    const needTotalList = initTotalList(columns)
 
     this.state = {
       selectedRowKeys: [],
       needTotalList,
-    };
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     // clean state
     if (nextProps.selectedRows.length === 0) {
-      const needTotalList = initTotalList(nextProps.columns);
+      const needTotalList = initTotalList(nextProps.columns)
       this.setState({
         selectedRowKeys: [],
         needTotalList,
-      });
+      })
     }
   }
 
   handleRowSelectChange = (selectedRowKeys, selectedRows) => {
-    let needTotalList = [...this.state.needTotalList];
+    let needTotalList = [...this.state.needTotalList]
     needTotalList = needTotalList.map(item => {
       return {
         ...item,
         total: selectedRows.reduce((sum, val) => {
-          return sum + parseFloat(val[item.dataIndex], 10);
+          return sum + parseFloat(val[item.dataIndex], 10)
         }, 0),
-      };
-    });
+      }
+    })
 
     if (this.props.onSelectRow) {
-      this.props.onSelectRow(selectedRows);
+      this.props.onSelectRow(selectedRows)
     }
 
-    this.setState({ selectedRowKeys, needTotalList });
+    this.setState({ selectedRowKeys, needTotalList })
   };
 
   handleTableChange = (pagination, filters, sorter) => {
-    this.props.onChange(pagination, filters, sorter);
+    this.props.onChange(pagination, filters, sorter)
   };
 
   cleanSelectedKeys = () => {
-    this.handleRowSelectChange([], []);
+    this.handleRowSelectChange([], [])
   };
 
   render() {
-    const { selectedRowKeys, needTotalList } = this.state;
-    const { data: { list, pagination }, loading, columns, rowKey } = this.props;
+    const { selectedRowKeys, needTotalList } = this.state
+    const { data: { list, pagination }, loading, columns, rowKey } = this.props
 
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
       ...pagination,
-    };
+    }
 
     const rowSelection = {
       selectedRowKeys,
@@ -77,7 +77,7 @@ class StandardTable extends PureComponent {
       getCheckboxProps: record => ({
         disabled: record.disabled,
       }),
-    };
+    }
 
     return (
       <div className={styles.standardTable}>
@@ -99,7 +99,7 @@ class StandardTable extends PureComponent {
                 </a>
               </Fragment>
             }
-            type="info"
+            type='info'
             showIcon
           />
         </div>
@@ -113,8 +113,8 @@ class StandardTable extends PureComponent {
           onChange={this.handleTableChange}
         />
       </div>
-    );
+    )
   }
 }
 
-export default StandardTable;
+export default StandardTable

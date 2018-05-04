@@ -134,8 +134,6 @@ export default class BasicLayout extends React.PureComponent {
       return redirect
     };
 
-
-
     render() {
       const {
         fetchingNotices,
