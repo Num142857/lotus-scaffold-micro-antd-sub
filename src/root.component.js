@@ -13,15 +13,6 @@ import {
   Redirect
 } from 'react-router-dom'
 import { getRouterData } from './common/router'
-import createHistory from 'history/createBrowserHistory'
-const history = createHistory()
-const location = history.location
-history.listen(function (location, action) {
-  // youAreHere.textContent = location.pathname
-  console.log("网址改变了,我这里已经知道")
-  console.log(location, action)
-  
-})
 export default class RootComponent extends React.Component {
     state = { store: this.props.store, globalEventDistributor: this.props.globalEventDistributor };
 
@@ -29,7 +20,12 @@ export default class RootComponent extends React.Component {
       console.log(error, info)
     }
     componentWillMount(){
+      this.props.history.listen(function (location, action) {
+        // youAreHere.textContent = location.pathname
+        console.log("网址改变了,sub2已经知道")
+        console.log(location, action)
 
+      })
     }
 
     setStore(store) {
