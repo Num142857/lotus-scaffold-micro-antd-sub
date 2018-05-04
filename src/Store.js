@@ -1,9 +1,9 @@
 import { createStore, combineReducers } from 'redux'
-import menuDate from "./common/menu"
+import menuDate from './common/menu'
 import createHistory from 'history/createBrowserHistory'
 const history = createHistory()
 
-const initialState = { 
+const initialState = {
   refresh: 0
 }
 
@@ -19,12 +19,12 @@ function render(state = initialState, action) {
   }
 }
 
-function menu(){
+function menu() {
   return menuDate
 }
 
-function to(state,action){
-  if (action.type === 'to'){
+function to(state, action) {
+  if (action.type === 'to') {
     history.replace(action.path)
     console.log('sub 准备push')
     return { path: action.path }
@@ -32,5 +32,5 @@ function to(state,action){
   return {}
 }
 
-export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, render, to}))
+export const storeInstance = createStore(combineReducers({ namespace: () => 'list', menu, render, to }))
 export { history }
