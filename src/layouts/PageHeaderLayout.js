@@ -10,6 +10,6 @@ export default ({ children, wrapperClassName, top, ...restProps }) => (
   <div style={wrapperStyle} className={wrapperClassName}>
     {top}
     <PageHeader key='pageheader' {...restProps} linkElement={Link} />
-    {children ? <div className='content'>{children}</div> : null}
+    {children ? <div className='page-content'>{children}</div> : null}
   </div>
 )
