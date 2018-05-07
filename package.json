@@ -131,7 +131,7 @@
     },
     "registerConfig": {
         "name": "lotus-scaffold-micro-antd-sub",
-        "path": ["/list", "/applications" ],
+        "path": ["/list", "/applications" ,"/test"],
         "prefix": "/lotus-scaffold-micro-antd-sub/",
         "main": "/lotus-scaffold-micro-antd-sub/main.js",
         "store": "/lotus-scaffold-micro-antd-sub/store.js"
