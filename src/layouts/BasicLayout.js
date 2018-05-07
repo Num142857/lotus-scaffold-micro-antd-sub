@@ -133,41 +133,95 @@ export default class BasicLayout extends React.PureComponent {
       }
       return redirect
     };
+        handleMenuCollapse = collapsed => {
+          this.setState({
+            collapsed: !this.state.collapsed,
+          })
+        };
 
-    render() {
-      const {
-        fetchingNotices,
-        notices,
-        routerData,
-        match,
-        location,
-      } = this.props
-      const { collapsed } = this.state
-      const menus = getMenuData()
-      const bashRedirect = this.getBashRedirect()
-      const layout = (
-        <Switch>
-          {getRoutes(match.path, routerData).map(item => (
-            <Route key={item.key}
-              path={item.path}
-              component={item.component}
-              exact={item.exact}
-            />
+        render() {
+          const {
+            fetchingNotices,
+            notices,
+            routerData,
+            match,
+            location,
+          } = this.props
+          const currentUser = {
+            name: 'Serati Ma',
+            avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+            userid: '00000001',
+            notifyCount: 12,
+          }
+          const { collapsed } = this.state
+          const menus = getMenuData()
+          const bashRedirect = this.getBashRedirect()
+          let layout = (
+            <Switch>
+              {getRoutes(match.path, routerData).map(item => (
+                <Route key={item.key}
+                  path={item.path}
+                  component={item.component}
+                  exact={item.exact}
+                />
 
-          ))}
-          <Redirect exact from='/' to={bashRedirect} />
-          <Route render={NotFound} />
-        </Switch>
-      )
+              ))}
+              <Redirect exact from='/' to={bashRedirect} />
+              <Route render={NotFound} />
+            </Switch>
+          )
 
-      return (
-        <DocumentTitle title={this.getPageTitle()}>
-          <ContainerQuery query={query}>
-            {params => {
-              return <div className={classNames(params)}>{layout}</div>
-            }}
-          </ContainerQuery>
-        </DocumentTitle>
-      )
-    }
+          // 开发模式显示菜单
+          if (process.env.NODE_ENV === 'development') {
+            layout = (
+              <Layout>
+                <SiderMenu
+                  menuData={getMenuData()}
+                  collapsed={collapsed}
+                  location={location}
+                  onCollapse={this.handleMenuCollapse}
+                />
+                <Layout >
+                  <Header style={{ padding: 0 }}>
+                    <GlobalHeader
+                      logo={logo}
+                      currentUser={currentUser}
+                      fetchingNotices={fetchingNotices}
+                      notices={notices}
+                      collapsed={collapsed}
+                      isMobile={this.state.isMobile}
+                      onNoticeClear={this.handleNoticeClear}
+                      onCollapse={this.handleMenuCollapse}
+                      onMenuClick={this.handleMenuClick}
+                      onNoticeVisibleChange={this.handleNoticeVisibleChange}
+                    />
+                  </Header>
+                  <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: '100vh' }}>
+                    <Switch>
+                      {getRoutes(match.path, routerData).map(item => (
+                        <Route key={item.key}
+                          path={item.path}
+                          component={item.component}
+                          exact={item.exact}
+                        />
+                      ))}
+                      <Redirect exact from='/' to={bashRedirect} />
+                      <Route render={NotFound} />
+                    </Switch>
+                  </Content>
+                </Layout>
+              </Layout>
+            )
+          }
+
+          return (
+            <DocumentTitle title={this.getPageTitle()}>
+              <ContainerQuery query={query}>
+                {params => {
+                  return <div className={classNames(params)}>{layout}</div>
+                }}
+              </ContainerQuery>
+            </DocumentTitle>
+          )
+        }
 }

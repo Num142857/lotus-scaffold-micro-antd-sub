@@ -149,9 +149,9 @@ export default class Ellipsis extends Component {
     const { text, targetCount } = this.state
     const { children, lines, length, className, tooltip, ...restProps } = this.props
 
-    const cls = classNames(styles.ellipsis, className, {
-      [styles.lines]: lines && !isSupportLineClamp,
-      [styles.lineClamp]: lines && isSupportLineClamp,
+    const cls = classNames('ellipsis', className, {
+      'lines': lines && !isSupportLineClamp,
+      'lineClamp': lines && isSupportLineClamp,
     })
 
     if (!lines && !length) {
@@ -211,10 +211,10 @@ export default class Ellipsis extends Component {
           ) : (
             childNode
           )}
-          <div className={styles.shadow} ref={this.handleShadowChildren}>
+          <div className='shadow' ref={this.handleShadowChildren}>
             {children}
           </div>
-          <div className={styles.shadow} ref={this.handleShadow}>
+          <div className='shadow' ref={this.handleShadow}>
             <span>{text}</span>
           </div>
         </div>

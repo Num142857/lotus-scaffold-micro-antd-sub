@@ -176,7 +176,7 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
+            <span className='submitButtons'>
               <Button type='primary' htmlType='submit'>
                 查询
               </Button>
@@ -350,9 +350,9 @@ export default class TableList extends PureComponent {
     return (
       <PageHeaderLayout title='查询表格'>
         <Card bordered={false}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderForm()}</div>
-            <div className={styles.tableListOperator}>
+          <div className='tableList'>
+            <div className='tableListForm'>{this.renderForm()}</div>
+            <div className='tableListOperator'>
               <Button icon='plus' type='primary' onClick={() => this.handleModalVisible(true)}>
                 新建
               </Button>

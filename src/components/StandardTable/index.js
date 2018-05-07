@@ -80,8 +80,8 @@ class StandardTable extends PureComponent {
     }
 
     return (
-      <div className={styles.standardTable}>
-        <div className={styles.tableAlert}>
+      <div className='standardTable'>
+        <div className='tableAlert'>
           <Alert
             message={
               <Fragment>
