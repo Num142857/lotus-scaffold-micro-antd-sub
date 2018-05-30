@@ -105,7 +105,8 @@ module.exports = {
       Components: path.resolve(__dirname, '../src/components/'),
       Assets: path.resolve(__dirname, '../src/assets/'),
       Constant: path.resolve(__dirname, '../src/constant/'),
-      Common: path.resolve(__dirname, '../src/common/')
+      Common: path.resolve(__dirname, '../src/common/'),
+      Mock: path.resolve(__dirname, '../mock/')
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).

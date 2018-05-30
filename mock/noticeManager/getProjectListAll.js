@@ -1,12 +1,15 @@
 
 import Mock, { Random } from 'mockjs'
-import API_PATH from '../../common/apiPath'
+
+import API_PATH from 'Src/common/apiPath'
 
 const proxy = {
-  ['POST:' + API_PATH.NOTICE_MANAGER_CHANGE_DISPLAY]: function (req, res) {
+  ['POST:' + API_PATH.GET_PROJECT_LIST_ALL]: function (req, res) {
     let data = Mock.mock({
       'code': 0,
-      'errmsg': 'mock'
+      'errmsg': 'mock',
+      'data': [
+      ]
     })
     return [200, data]
   }

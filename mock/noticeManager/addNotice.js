@@ -1,20 +1,20 @@
 
 import Mock, { Random } from 'mockjs'
-// import API_PATH from '@common/apiPath'
-import API_PATH from '../../common/apiPath'
+
+import API_PATH from 'Src/common/apiPath'
 
 const proxy = {
-  ['POST:' + API_PATH.NOTICE_MANAGER_APPROVE_SIGNED_ITEM]: function (req, res) {
+  ['POST:' + API_PATH.NOTICE_MANAGER_ADD_NOTICE]: function (req, res) {
     let data = Mock.mock({
       'code': 0,
       'errmsg': 'mock',
       'data': [
         {
-          'gmtCreate': Random.datetime(),
+          'gmtCreate': 'mock',
           'createdBy': 'mock',
-          'gmtModify': Random.datetime(),
+          'gmtModify': 'mock',
           'modifiedBy': 'mock',
-          'del': 59
+          'del': 'mock'
         }
       ]
     })

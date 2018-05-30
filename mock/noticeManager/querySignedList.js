@@ -1,7 +1,7 @@
 
 import Mock, { Random } from 'mockjs'
-// import API_PATH from '@common/apiPath'
-import API_PATH from '../../common/apiPath'
+
+import API_PATH from 'Src/common/apiPath'
 
 const proxy = {
   ['POST:' + API_PATH.NOTICE_MANAGER_QUERY_SIGNED_LIST]: function (req, res) {

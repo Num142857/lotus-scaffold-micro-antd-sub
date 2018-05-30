@@ -1,11 +1,13 @@
 import axios from 'axios'
 import { notification, message } from 'antd'
-import proxy from '../mock/'
+import proxy from 'Mock/'
 import MockAdapter from 'axios-mock-adapter'
 
 import { apiPathProgress } from 'Common/apiPath'
 // 是否禁用代理
-const ENV_MOCK = process.env.MOCK === true // 'true'
+const ENV_MOCK = process.env.MOCK === 'true'
+console.log(process.env.MOCK)
+console.log(ENV_MOCK)
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -79,24 +81,21 @@ if (ENV_MOCK) {
     let result = item.split(':')
     let method = result[0].toUpperCase()
     let url = result[1]
-    if (!apiPathProgress[url]) {
-      //
-      switch (method) {
-        case 'GET':
-          mock.onGet(url).reply(200, proxy[item].body || proxy[item])
-          break
-        case 'POST':
-          let v = proxy[item]
-          if (typeof v === 'function') {
-            mock.onPost(url, proxy[item].params).reply(v)
-          } else {
-            mock.onPost(url, proxy[item].params).reply(200, proxy[item].body || proxy[item])
-          }
-          break
-        case 'DELETE':
-          mock.onDelete(url, proxy[item].params).reply(200, proxy[item].body || proxy[item])
-          break
-      }
+    switch (method) {
+      case 'GET':
+        mock.onGet(url).reply(200, proxy[item].body || proxy[item])
+        break
+      case 'POST':
+        let v = proxy[item]
+        if (typeof v === 'function') {
+          mock.onPost(url, proxy[item].params).reply(v)
+        } else {
+          mock.onPost(url, proxy[item].params).reply(200, proxy[item].body || proxy[item])
+        }
+        break
+      case 'DELETE':
+        mock.onDelete(url, proxy[item].params).reply(200, proxy[item].body || proxy[item])
+        break
     }
   })
 }

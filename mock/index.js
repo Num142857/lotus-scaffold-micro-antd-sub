@@ -1,9 +1,11 @@
 import noticeManagerProxy from './noticeManager/'
 import workflowManagerProxy from './workflowManager/'
+import user from './user/'
 
 const allProxy = {
   ...noticeManagerProxy,
-  ...workflowManagerProxy
+  ...workflowManagerProxy,
+  ...user
 }
 
 export default allProxy

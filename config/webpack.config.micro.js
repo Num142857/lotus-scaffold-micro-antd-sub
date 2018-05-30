@@ -124,7 +124,8 @@ let config = {
       Components: path.resolve(__dirname, '../src/components/'),
       Assets: path.resolve(__dirname, '../src/assets/'),
       Constant: path.resolve(__dirname, '../src/constant/'),
-      Common: path.resolve(__dirname, '../src/common/')
+      Common: path.resolve(__dirname, '../src/common/'),
+      Mock: path.resolve(__dirname, '../mock/')
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -132,7 +133,7 @@ let config = {
       // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
-      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson, paths.mock]),
     ],
   },
   module: {
@@ -148,7 +149,7 @@ let config = {
         test: /\.(js|jsx|mjs)$/,
         enforce: 'pre',
         loader: 'happypack/loader?id=eslint',
-        include: paths.appSrc,
+        include: [paths.appSrc, paths.mock],
       },
       {
         // "oneOf" will traverse all following loaders until one will
@@ -172,7 +173,7 @@ let config = {
           // Process JS with Babel.
           {
             test: /\.(js|jsx|mjs)$/,
-            include: paths.appSrc,
+            include: [paths.appSrc, paths.mock],
             // use: ['happypack/loader?id=babel'],
             loader: 'happypack/loader?id=babel',
           },

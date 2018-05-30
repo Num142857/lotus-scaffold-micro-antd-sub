@@ -91,7 +91,8 @@ function getClientEnvironment(publicUrl) {
     TEST: process.env.BUILD_ENV === 'test',
     PRE: process.env.BUILD_ENV === 'pre',
     PROD: process.env.BUILD_ENV === 'prod',
-    MICRO: process.env.DEV_ENV === 'micro'
+    MICRO: process.env.DEV_ENV === 'micro',
+    MOCK: process.env.ENV_MOCK === true
   }
 
   return { raw, stringified }

@@ -1,8 +1,7 @@
 
 import Mock, { Random } from 'mockjs'
 
-// import API_PATH from '@common/apiPath'
-import API_PATH from '../../common/apiPath'
+import API_PATH from 'Src/common/apiPath'
 
 const proxy = {
   ['POST:' + API_PATH.NOTICE_MANAGER_QUERY_LIST]: function (req, res) {
@@ -24,8 +23,6 @@ const proxy = {
               'townName': '所属小镇',
               'isDisplay|0-1': 1,
               'status|0-1': 1,
-              'isTop|0-1': 1,
-              'isSignUp|0-1': 1,
               'gmtCreate': Random.datetime(),
               'createdBy': 'mock',
               'gmtModify': Random.datetime(),
