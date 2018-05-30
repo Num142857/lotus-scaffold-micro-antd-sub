@@ -89,9 +89,9 @@ function ask(files, metalsmith, done) {
       message: '路径',
     }]).then((answers) => {
       var metadata = metalsmith.metadata()
-        metadata['componentName'] = answers.componentName
+      metadata['componentName'] = answers.componentName
       metalsmith.destination(process.cwd() + '/' + answers.path)
-        done()
+      done()
     })
 }
 
