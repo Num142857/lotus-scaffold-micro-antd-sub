@@ -9,12 +9,18 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const eslintFormatter = require('react-dev-utils/eslintFormatter')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
+const ProgressPlugin = require('webpack/lib/ProgressPlugin')
+const betterProgress = require('better-webpack-progress')
+const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin')
+// const WebpackSftpClient = require('webpack-sftp-client')
+const WebpackFtpUpload = require('webpack-ftp-upload-plugin')
+const HappyPack = require('happypack')
 const paths = require('./paths')
 const getClientEnvironment = require('./env')
 const packageConfig = require('../package.json')
-
+const projectConfig = require('../public/project.json')
+const happyThreadPool = HappyPack.ThreadPool({ size: 4 })
 // import { join, resolve } from 'path'
-// console.log()
 let theme = {}
 if (packageConfig.theme && typeof (packageConfig.theme) === 'string') {
   let cfgPath = packageConfig.theme
@@ -44,9 +50,9 @@ const env = getClientEnvironment(publicUrl)
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
-if (env.stringified['process.env'].NODE_ENV !== '"production"') {
-  throw new Error('Production builds must have NODE_ENV=production.')
-}
+// if (env.stringified['process.env'].NODE_ENV !== '"production"') {
+//   throw new Error('Production builds must have NODE_ENV=production.')
+// }
 
 // Note: defined here because it will be used more than once.
 const cssFilename = 'static/css/[name].[contenthash:8].css'
@@ -56,19 +62,19 @@ const cssFilename = 'static/css/[name].[contenthash:8].css'
 // However, our output is structured with css, js and media folders.
 // To have this structure working with relative paths, we have to use custom options.
 const extractTextPluginOptions = shouldUseRelativeAssetPaths
-  ? // Making sure that the publicPath goes back to to build folder.
-  { publicPath: Array(cssFilename.split('/').length).join('../') }
+  ? { publicPath: Array(cssFilename.split('/').length).join('../') } // Making sure that the publicPath goes back to to build folder.
   : {}
 
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
-module.exports = {
+let config = {
   // Don't attempt to continue if there are any errors.
   bail: true,
   // We generate sourcemaps in production. This is slow but gives good results.
   // You can exclude the *.map files from the build during deployment.
-  devtool: shouldUseSourceMap ? 'source-map' : false,
+  // devtool: shouldUseSourceMap ? 'source-map' : false,
+  devtool: false,
   // In production, we only want to load the polyfills and the app code.
   entry: {
     main: [require.resolve('./polyfills'), paths.appIndexJs],
@@ -83,10 +89,10 @@ module.exports = {
     filename: '[name].js?n=[chunkhash:8]',
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
-    publicPath: packageConfig.registerConfig.prefix,
+    publicPath: projectConfig.prefix,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     libraryTarget: 'amd',
-    library: packageConfig.registerConfig.name,
+    library: projectConfig.name,
     devtoolModuleFilenameTemplate: info =>
       path
         .relative(paths.appSrc, info.absoluteResourcePath)
@@ -117,7 +123,8 @@ module.exports = {
       Util: path.resolve(__dirname, '../src/utils/'),
       Components: path.resolve(__dirname, '../src/components/'),
       Assets: path.resolve(__dirname, '../src/assets/'),
-      Constant: path.resolve(__dirname, '../src/constant/')
+      Constant: path.resolve(__dirname, '../src/constant/'),
+      Common: path.resolve(__dirname, '../src/common/')
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -140,17 +147,7 @@ module.exports = {
       {
         test: /\.(js|jsx|mjs)$/,
         enforce: 'pre',
-        use: [
-          {
-            options: {
-              formatter: eslintFormatter,
-              eslintPath: require.resolve('eslint'),
-              // publicPath: packageConfig.registerConfig.prefix,
-
-            },
-            loader: require.resolve('eslint-loader'),
-          },
-        ],
+        loader: 'happypack/loader?id=eslint',
         include: paths.appSrc,
       },
       {
@@ -162,35 +159,22 @@ module.exports = {
           // assets smaller than specified size as data URLs to avoid requests.
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-            loader: require.resolve('url-loader'),
-            options: {
-              limit: 10000,
-              name: 'static/media/[name].[hash:8].[ext]',
-              publicPath: packageConfig.registerConfig.prefix,
-            },
+            // loader: 'happypack/loader?id=url',
+            loaders: [{
+              loader: require.resolve('url-loader'),
+              options: {
+                limit: 5000,
+                name: 'static/media/[name].[hash:8].[ext]',
+                publicPath: projectConfig.prefix,
+              },
+            }]
           },
           // Process JS with Babel.
           {
             test: /\.(js|jsx|mjs)$/,
             include: paths.appSrc,
-            loader: require.resolve('babel-loader'),
-            options: {
-              plugins: [
-                // 引入样式为 css
-                ['import', { libraryName: 'antd', style: true }],
-                ['babel-plugin-react-css-modules', {
-                  // generateScopedName: '[name]__[local]',
-                  // filetypes: {
-                  //   '.less': 'postcss-less'
-                  // }
-                }]
-
-                // 改动: 引入样式为 less
-                //  ['import', { libraryName: 'antd', style: true }],
-              ],
-              compact: true,
-              // publicPath: packageConfig.registerConfig.prefix,
-            },
+            // use: ['happypack/loader?id=babel'],
+            loader: 'happypack/loader?id=babel',
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.
@@ -209,81 +193,13 @@ module.exports = {
           {
             test: /.(css|less)$/,
             exclude: /node_modules|antd\.css/,
-            use: [
-              require.resolve('style-loader'),
-              {
-                loader: require.resolve('css-loader'),
-                options: {
-                  importLoaders: 1,
-                  // modules: true, // 新增对css modules的支持
-                  // localIdentName: '[name]__[local]__[hash:base64:5]',
-                },
-              },
-              {
-                loader: require.resolve('postcss-loader'),
-                options: {
-                  // Necessary for external CSS imports to work
-                  // https://github.com/facebookincubator/create-react-app/issues/2677
-                  ident: 'postcss',
-                  plugins: () => [
-                    require('postcss-flexbugs-fixes'),
-                    autoprefixer({
-                      browsers: [
-                        '>1%',
-                        'last 4 versions',
-                        'Firefox ESR',
-                        'not ie < 9', // React doesn't support IE8 anyway
-                      ],
-                      flexbox: 'no-2009',
-                    }),
-                  ],
-                },
-              },
-              {
-                loader: require.resolve('less-loader'), // compiles Less to CSS
-                options: { javascriptEnabled: true, 'modifyVars': theme },
-              },
-
-            ],
+            loader: 'happypack/loader?id=css',
           },
           // 准对antd的样式
           {
             test: /.(css|less)$/,
             include: /node_modules|antd\.css/,
-            use: [
-              require.resolve('style-loader'),
-              {
-                loader: require.resolve('css-loader'),
-                options: {
-                  importLoaders: 1,
-                },
-              },
-              {
-                loader: require.resolve('postcss-loader'),
-                options: {
-                  // Necessary for external CSS imports to work
-                  // https://github.com/facebookincubator/create-react-app/issues/2677
-                  ident: 'postcss',
-                  plugins: () => [
-                    require('postcss-flexbugs-fixes'),
-                    autoprefixer({
-                      browsers: [
-                        '>1%',
-                        'last 4 versions',
-                        'Firefox ESR',
-                        'not ie < 9', // React doesn't support IE8 anyway
-                      ],
-                      flexbox: 'no-2009',
-                    }),
-                  ],
-                },
-              },
-              {
-                loader: require.resolve('less-loader'), // compiles Less to CSS
-                options: { javascriptEnabled: true, 'modifyVars': theme },
-              },
-
-            ],
+            loader: 'happypack/loader?id=cssAntd',
           },
           // {
           //   test: /.(css|less)$/,
@@ -304,7 +220,7 @@ module.exports = {
             exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
-              publicPath: packageConfig.registerConfig.prefix,
+              publicPath: projectConfig.prefix,
             },
           },
           // ** STOP ** Are you adding a new loader?
@@ -314,6 +230,154 @@ module.exports = {
     ],
   },
   plugins: [
+    new HappyPack({
+      // 用唯一的标识符 id 来代表当前的 HappyPack 是用来处理一类特定的文件
+      id: 'babel',
+      // 如何处理 .js 文件，用法和 Loader 配置中一样
+      threadPool: happyThreadPool,
+      loaders: [{
+        loader: 'babel-loader',
+        options: {
+          plugins: [
+            // 引入样式为 css
+            ['import', { libraryName: 'antd', style: true }],
+            ['babel-plugin-react-css-modules', {
+              // generateScopedName: '[name]__[local]',
+              // filetypes: {
+              //   '.less': 'postcss-less'
+              // }
+            }]
+
+            // 改动: 引入样式为 less
+            //  ['import', { libraryName: 'antd', style: true }],
+          ],
+          compact: true,
+          // publicPath: projectConfig.prefix,
+        },
+      }],
+      // ... 其它配置项
+    }),
+    new HappyPack({
+      // 用唯一的标识符 id 来代表当前的 HappyPack 是用来处理一类特定的文件
+      id: 'cssAntd',
+      threadPool: happyThreadPool,
+      loaders: [
+        require.resolve('style-loader'),
+        {
+          loader: require.resolve('css-loader'),
+          options: {
+            importLoaders: 1,
+          },
+        },
+        {
+          loader: require.resolve('postcss-loader'),
+          threadPool: happyThreadPool,
+          options: {
+            // Necessary for external CSS imports to work
+            // https://github.com/facebookincubator/create-react-app/issues/2677
+            ident: 'postcss',
+            plugins: () => [
+              require('postcss-flexbugs-fixes'),
+              autoprefixer({
+                browsers: [
+                  '>1%',
+                  'last 4 versions',
+                  'Firefox ESR',
+                  'not ie < 9', // React doesn't support IE8 anyway
+                ],
+                flexbox: 'no-2009',
+              }),
+            ],
+          },
+        },
+        {
+          loader: require.resolve('less-loader'), // compiles Less to CSS
+          options: { javascriptEnabled: true, 'modifyVars': theme },
+        },
+
+      ]
+
+    }),
+    new HappyPack({
+      // 用唯一的标识符 id 来代表当前的 HappyPack 是用来处理一类特定的文件
+      id: 'css',
+      threadPool: happyThreadPool,
+      loaders: [
+        require.resolve('style-loader'),
+        {
+          loader: require.resolve('css-loader'),
+          options: {
+            importLoaders: 1,
+            // modules: true, // 新增对css modules的支持
+            // localIdentName: '[name]__[local]__[hash:base64:5]',
+          },
+        },
+        {
+          loader: require.resolve('postcss-loader'),
+          options: {
+            // Necessary for external CSS imports to work
+            // https://github.com/facebookincubator/create-react-app/issues/2677
+            ident: 'postcss',
+            plugins: () => [
+              require('postcss-flexbugs-fixes'),
+              autoprefixer({
+                browsers: [
+                  '>1%',
+                  'last 4 versions',
+                  'Firefox ESR',
+                  'not ie < 9', // React doesn't support IE8 anyway
+                ],
+                flexbox: 'no-2009',
+              }),
+            ],
+          },
+        },
+        {
+          loader: require.resolve('less-loader'), // compiles Less to CSS
+          options: { javascriptEnabled: true, 'modifyVars': theme },
+        },
+      ]
+    }),
+    new HappyPack({
+      // 用唯一的标识符 id 来代表当前的 HappyPack 是用来处理一类特定的文件
+      id: 'eslint',
+      threadPool: happyThreadPool,
+      loaders: [
+        {
+          options: {
+            formatter: eslintFormatter,
+            eslintPath: require.resolve('eslint'),
+            // publicPath: projectConfig.prefix,
+
+          },
+          loader: require.resolve('eslint-loader'),
+        },
+      ]
+    }),
+    // new HappyPack({
+    //   // 用唯一的标识符 id 来代表当前的 HappyPack 是用来处理一类特定的文件
+    //   id: 'url',
+    //   threadPool: happyThreadPool,
+    //   loaders: [{
+    //     loader: require.resolve('url-loader'),
+    //     options: {
+    //       limit: 10000,
+    //       name: 'static/media/[name].[hash:8].[ext]',
+    //       publicPath: projectConfig.prefix,
+    //     },
+    //   }]
+    // }),
+    // new HappyPack({
+    //   // 用唯一的标识符 id 来代表当前的 HappyPack 是用来处理一类特定的文件
+    //   id: 'css',
+    //   threadPool: happyThreadPool,
+    //   loaders: []
+    // }),
+    // new ProgressPlugin(betterProgress({
+    //   // mode: 'compact', // or 'detailed'
+    //   mode: 'detailed', // or 'detailed'
+    // })),
+    new SimpleProgressWebpackPlugin(),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -344,6 +408,7 @@ module.exports = {
     new webpack.DefinePlugin(env.stringified),
     // Minify the code.
     new webpack.optimize.UglifyJsPlugin({
+      parallel: true,
       compress: {
         warnings: false,
         // Disabled because of an issue with Uglify breaking seemingly valid code:
@@ -420,3 +485,22 @@ module.exports = {
     child_process: 'empty',
   },
 }
+
+if (process.env.DEPLOY) {
+  switch (process.env.BUILD_ENV) {
+    case 'dev':
+      config.plugins.push(new WebpackFtpUpload(require('./deploy.config.dev')))
+      break
+    case 'test':
+      config.plugins.push(new WebpackFtpUpload(require('./deploy.config.test')))
+      break
+    case 'pre':
+      config.plugins.push(new WebpackFtpUpload(require('./deploy.config.pre')))
+      break
+    case 'prod':
+      config.plugins.push(new WebpackFtpUpload(require('./deploy.config.prod')))
+      break
+  }
+}
+
+module.exports = config

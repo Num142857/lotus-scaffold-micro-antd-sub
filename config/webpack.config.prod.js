@@ -40,9 +40,8 @@ const cssFilename = 'static/css/[name].[contenthash:8].css'
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
 // However, our output is structured with css, js and media folders.
 // To have this structure working with relative paths, we have to use custom options.
-const extractTextPluginOptions = shouldUseRelativeAssetPaths
-  ? // Making sure that the publicPath goes back to to build folder.
-  { publicPath: Array(cssFilename.split('/').length).join('../') }
+const extractTextPluginOptions = shouldUseRelativeAssetPaths // Making sure that the publicPath goes back to to build folder.
+  ? { publicPath: Array(cssFilename.split('/').length).join('../') }
   : {}
 
 // This is the production configuration.
@@ -97,7 +96,8 @@ module.exports = {
       Util: path.resolve(__dirname, '../src/utils/'),
       Components: path.resolve(__dirname, '../src/components/'),
       assets: path.resolve(__dirname, '../src/assets/'),
-      Constant: path.resolve(__dirname, '../src/constant/')
+      Constant: path.resolve(__dirname, '../src/constant/'),
+      '@common': path.resolve(__dirname, '../src/common/')
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).

@@ -71,6 +71,9 @@ export function getPlainNode(nodeList, parentPath = '') {
 }
 
 export function digitUppercase(n) {
+  if (Number.isNaN(Number(n))) {
+    return ''
+  }
   const fraction = ['角', '分']
   const digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
   const unit = [['元', '万', '亿'], ['', '拾', '佰', '仟']]
@@ -150,6 +153,51 @@ export function getRoutes(path, routerData) {
       path: `${path}${item}`,
     }
   })
+
+  return renderRoutes
+}
+
+/**
+ * Get router routing configuration
+ * { path:{name,...param}}=>Array<{name,path ...param}>
+ * @param {string} path
+ * @param {routerData} routerData
+ */
+export function getRoutesExtension(path, routerData) {
+  // let routerDataExtension = []
+  // Object.keys(routerData).forEach(
+  //   key => {
+  //     let data = routerData[key]
+  //     if (data.extension) {
+  //       routerDataExtension.push({})
+  //     }
+  //   }
+  // )
+  let routesExtension = Object.keys(routerData).filter(
+    key => {
+      let data = routerData[key]
+      return !!data.extension
+    }
+  )
+
+  if (!routesExtension.length) return []
+  let routes = routesExtension.filter(
+    routePath => routePath.indexOf(path) === 0 && routePath !== path
+  )
+  // Replace path to '' eg. path='user' /user/name => name
+  routes = routes.map(item => item.replace(path, ''))
+
+  // Conversion and stitching parameters
+  const renderRoutes = routes.map(item => {
+    const exact = !routes.some(route => route !== item && getRelation(route, item) === 1)
+    return {
+      exact,
+      ...routerData[`${path}${item}`],
+      key: `${path}${item}`,
+      path: `${path}${item}`,
+    }
+  })
+
   return renderRoutes
 }
 

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Layout, Menu, Icon } from 'antd'
 import pathToRegexp from 'path-to-regexp'
 import { Link } from 'react-router-dom'
-import styles from './index.less'
+import './index.less'
 import { urlToList } from '../_utils/pathTools'
 
 const { Sider } = Layout
@@ -210,17 +210,11 @@ export default class SiderMenu extends PureComponent {
         breakpoint='lg'
         onCollapse={onCollapse}
         width={256}
-        className='sider'
+        className='sider sub'
       >
-        <div className='logo' key='logo'>
-          <Link to='/'>
-            {/* <img src={logo} alt='logo' /> */}
-            <h1>Ant Design Pro</h1>
-          </Link>
-        </div>
+        <div style={{ height: '33px' }}></div>
         <Menu
           key='Menu'
-          theme='dark'
           mode='inline'
           {...menuProps}
           onOpenChange={this.handleOpenChange}

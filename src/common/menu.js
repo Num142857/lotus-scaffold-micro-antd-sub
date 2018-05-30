@@ -1,47 +1,25 @@
 import { isUrl } from '../utils/utils'
 let menuData = [
   {
-    name: '列表页',
+    name: '项目管理',
     icon: 'table',
-    path: 'list',
-    rank: 3,
+    path: 'project',
+    rank: 1,
     children: [
       {
-        name: '查询表格',
-        path: 'table-list',
+        name: '公告管理',
+        path: 'notice',
       },
       {
-        name: '标准列表',
-        path: 'basic-list',
+        name: '报名明细',
+        path: 'enroll/list',
+        hideInMenu: true, // 隐藏该条
       },
       {
-        name: '卡片列表',
-        path: 'card-list',
-      },
-      {
-        name: '搜索列表',
-        path: 'search',
-        children: [
-          {
-            name: '搜索列表（文章）',
-            path: 'articles',
-          },
-          {
-            name: '搜索列表（项目）',
-            path: 'projects',
-          },
-          {
-            name: '搜索列表（应用）',
-            path: 'applications',
-          },
-        ],
+        name: '404示例页面',
+        path: '404',
       },
     ],
-  }, {
-    rank: 4,
-    name: '搜索列表（应用）',
-    icon: 'table',
-    path: 'applications',
   }
 ]
 let originParentPath = '/'

@@ -1,8 +1,11 @@
 import axios from 'axios'
-import { notification } from 'antd'
-import { Link } from 'react-router-dom'
+import { notification, message } from 'antd'
 import proxy from '../mock/'
 import MockAdapter from 'axios-mock-adapter'
+
+import { apiPathProgress } from 'Common/apiPath'
+// 是否禁用代理
+const ENV_MOCK = process.env.MOCK === true // 'true'
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -31,10 +34,6 @@ function checkStatus(response) {
     message: `请求错误 ${response.status}: ${response.config.url}`,
     description: errortext,
   })
-  // const error = new Error(errortext)
-  // error.name = response.status
-  // error.response = response
-  // throw error
 }
 
 // 添加请求拦截器
@@ -54,24 +53,53 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(e)
 })
 
-var mock = new MockAdapter(axios)
-
-Object.keys(proxy).forEach((item) => {
-  let result = item.split(':')
-  let method = result[0].toUpperCase()
-  let url = result[1]
-  switch (method) {
-    case 'GET':
-      mock.onGet(url).reply(200, proxy[item].body || proxy[item])
-      break
-    case 'POST':
-      mock.onPost(url, proxy[item].params).reply(200, proxy[item].body || proxy[item])
-      break
-    case 'DELETE':
-      mock.onDelete(url, proxy[item].params).reply(200, proxy[item].body || proxy[item])
-      break
+axios.interceptors.response.use(function (response) {
+  if (response.code !== 0 && response.errmsg) {
+    message.warn(response.errmsg)
   }
+  return response
+}, function (e) {
+  return Promise.reject(e)
 })
+
+axios.interceptors.response.use(function (response) {
+  if (response.code === 2) {
+    // message.warn('登录信息已失效,需要重新登录')
+    // location.href = loginPage
+  }
+  return response
+}, function (error) {
+  return Promise.reject(error)
+})
+
+// 是否代理
+if (ENV_MOCK) {
+  var mock = new MockAdapter(axios)
+  Object.keys(proxy).forEach((item) => {
+    let result = item.split(':')
+    let method = result[0].toUpperCase()
+    let url = result[1]
+    if (!apiPathProgress[url]) {
+      //
+      switch (method) {
+        case 'GET':
+          mock.onGet(url).reply(200, proxy[item].body || proxy[item])
+          break
+        case 'POST':
+          let v = proxy[item]
+          if (typeof v === 'function') {
+            mock.onPost(url, proxy[item].params).reply(v)
+          } else {
+            mock.onPost(url, proxy[item].params).reply(200, proxy[item].body || proxy[item])
+          }
+          break
+        case 'DELETE':
+          mock.onDelete(url, proxy[item].params).reply(200, proxy[item].body || proxy[item])
+          break
+      }
+    }
+  })
+}
 
 export default axios
 export const post = axios.post

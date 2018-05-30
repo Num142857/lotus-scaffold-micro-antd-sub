@@ -26,7 +26,7 @@ function menu() {
 function to(state = initialState, action) {
   if (action.type !== 'to' && action.owner !== 'list') return { ...state, path: '/' }
   history.replace(action.path)
-  console.log('sub 准备push')
+
   return { ...state, path: action.path }
 }
 

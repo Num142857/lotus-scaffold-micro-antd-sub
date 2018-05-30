@@ -6,6 +6,7 @@ import appInfo from '../../package.json'
 
 let routerDataCache
 const NODE_ENV = process.env.NODE_ENV
+console.log(NODE_ENV)
 const modelNotExisted = (app, model) =>
   // eslint-disable-next-line
     !app._models.some(({ namespace }) => {
@@ -27,105 +28,31 @@ function getFlatMenuData(menus) {
 
 export const getRouterData = app => {
   let routerConfig = {
-    '/': {
-      component: asyncComponent(() => import('../layouts/BasicLayout')),
+    // '/': {
+    //   component: asyncComponent(() => import('../layouts/BasicLayout.local')),
+    // },
+    '/project/notice': {
+      component: asyncComponent(() => import('../routes/Notice/index'/* webpackChunkName: "Notice" */)),
     },
-    // '/dashboard/monitor': {
-    //   component: asyncComponent(() => import('../routes/Dashboard/Monitor')),
-    // },
-    // '/dashboard/workplace': {
-    //   component: asyncComponent(['project', 'activities', 'chart'], () =>
-    //             import('../routes/Dashboard/Workplace')
-    //   ),
-    //   // hideInBreadcrumb: true,
-    //   // name: '工作台',
-    //   // authority: 'admin',
-    // },
-    // '/form/basic-form': {
-    //   component: asyncComponent(() => import('../routes/Forms/BasicForm')),
-    // },
-    // '/form/step-form': {
-    //   component: asyncComponent(() => import('../routes/Forms/StepForm')),
-    // },
-    // '/form/step-form/info': {
-    //   name: '分步表单（填写转账信息）',
-    //   component: asyncComponent(() => import('../routes/Forms/StepForm/Step1')),
-    // },
-    // '/form/step-form/confirm': {
-    //   name: '分步表单（确认转账信息）',
-    //   component: asyncComponent(() => import('../routes/Forms/StepForm/Step2')),
-    // },
-    // '/form/step-form/result': {
-    //   name: '分步表单（完成）',
-    //   component: asyncComponent(() => import('../routes/Forms/StepForm/Step3')),
-    // },
-    // '/form/advanced-form': {
-    //   component: asyncComponent(() => import('../routes/Forms/AdvancedForm')),
-    // },
-    '/list/table-list': {
-      component: asyncComponent(() => import('../routes/List/TableList')),
+    '/project/notice/list': {
+      component: asyncComponent(() => import('../routes/Notice/NoticeList/'/* webpackChunkName: "NoticeList" */)),
     },
-    '/list/basic-list': {
-      component: asyncComponent(() => import('../routes/List/BasicList')),
+    '/project/notice/new': {
+      component: asyncComponent(() => import('../routes/Notice/NewNotice/'/* webpackChunkName: "NewNotice" */)),
+      name: '新增公告'
     },
-    '/list/card-list': {
-      component: asyncComponent(() => import('../routes/List/CardList')),
+    '/project/notice/edit/:id': {
+      component: asyncComponent(() => import('../routes/Notice/EditNotice/'/* webpackChunkName: "EditNotice" */)),
+      name: '编辑公告'
     },
-    // '/list/search': {
-    //   component: asyncComponent(() => import('../routes/List/List')),
-    // },
-    // '/list/search/projects': {
-    //   component: asyncComponent(() => import('../routes/List/Projects')),
-    // },
-    // '/list/search/applications': {
-    //   component: asyncComponent(() => import('../routes/List/Applications')),
-    // },
-    // '/list/search/articles': {
-    //   component: asyncComponent(() => import('../routes/List/Articles')),
-    // },
-    // '/profile/basic': {
-    //   component: asyncComponent(() => import('../routes/Profile/BasicProfile')),
-    // },
-    // '/profile/advanced': {
-    //   component: asyncComponent(() =>
-    //             import('../routes/Profile/AdvancedProfile')
-    //   ),
-    // },
-    // '/result/success': {
-    //   component: asyncComponent(() => import('../routes/Result/Success')),
-    // },
-    // '/result/fail': {
-    //   component: asyncComponent(() => import('../routes/Result/Error')),
-    // },
-    // '/exception/403': {
-    //   component: asyncComponent(() => import('../routes/Exception/403')),
-    // },
-    // '/exception/404': {
-    //   component: asyncComponent(() => import('../routes/Exception/404')),
-    // },
-    // '/exception/500': {
-    //   component: asyncComponent(() => import('../routes/Exception/500')),
-    // },
-    // '/exception/trigger': {
-    //   component: asyncComponent(() =>
-    //             import('../routes/Exception/triggerException')
-    //   ),
-    // },
-    // '/user': {
-    //   component: asyncComponent(() => import('../layouts/UserLayout')),
-    // },
-    // '/user/login': {
-    //   component: asyncComponent(() => import('../routes/User/Login')),
-    // },
-    // '/user/register': {
-    //   component: asyncComponent(() => import('../routes/User/Register')),
-    // },
-    // '/user/register-result': {
-    //   component: asyncComponent(() => import('../routes/User/RegisterResult')),
-    // },
-    // '/user/:id': {
-    //   component: asyncComponent(() => import('../routes/User/SomeComponent')),
-    // },
+    '/project/notice/detail/:id': {
+      component: asyncComponent(() => import('../routes/Notice/NoticeDetail/'/* webpackChunkName: "NoticeDetail" */)),
+      name: '公告详情'
+    },
+    '/project/notice/enroll/list/:id/:name': {
+      component: asyncComponent(() => import('../routes/Notice/EnrollList/'/* webpackChunkName: "EnrollList" */)),
+      name: '报名信息'
+    }
   }
 
   // Get name from ./menu.js or just set it in the router data.
@@ -157,11 +84,6 @@ export const getRouterData = app => {
       hideInBreadcrumb: router.hideInBreadcrumb || menuItem.hideInBreadcrumb,
     }
     routerData[path] = router
-    // if (NODE_ENV === 'development') {
-    //   routerData[path] = router
-    // } else {
-    //   routerData[`/${appInfo.registerConfig.name}${path}`] = router
-    // }
   })
   return routerData
 }

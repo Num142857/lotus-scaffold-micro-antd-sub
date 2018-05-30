@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import pathToRegexp from 'path-to-regexp'
 import { Breadcrumb, Tabs } from 'antd'
 import classNames from 'classnames'
-import styles from './index.less'
+import './index.less'
 import { urlToList } from '../_utils/pathTools'
 
 const { TabPane } = Tabs
@@ -97,17 +97,17 @@ export default class PageHeader extends PureComponent {
       ) : null
     })
     // Add home breadcrumbs to your head
-    extraBreadcrumbItems.unshift(
-      <Breadcrumb.Item key='home'>
-        {createElement(
-          linkElement,
-          {
-            [linkElement === 'a' ? 'href' : 'to']: '/',
-          },
-          '首页'
-        )}
-      </Breadcrumb.Item>
-    )
+    // extraBreadcrumbItems.unshift(
+    //   <Breadcrumb.Item key='home'>
+    //     {createElement(
+    //       linkElement,
+    //       {
+    //         [linkElement === 'a' ? 'href' : 'to']: '/',
+    //       },
+    //       '首页'
+    //     )}
+    //   </Breadcrumb.Item>
+    // )
     return (
       <Breadcrumb className='breadcrumb' separator={breadcrumbSeparator}>
         {extraBreadcrumbItems}
@@ -186,32 +186,35 @@ export default class PageHeader extends PureComponent {
       activeKeyProps.activeKey = tabActiveKey
     }
     return (
-      <div className={clsString}>
-        {this.state.breadcrumb}
-        <div className='detail'>
-          {logo && <div className='logo'>{logo}</div>}
-          <div className='main'>
-            <div className='row'>
-              {title && <h1 className='title'>{title}</h1>}
-              {action && <div className='action'>{action}</div>}
-            </div>
-            <div className='row'>
-              {content && <div className='content'>{content}</div>}
-              {extraContent && <div className='extraContent'>{extraContent}</div>}
+      <div>
+        <div className='breadcrumb-box'>
+          {this.state.breadcrumb}
+        </div>
+        <div className={clsString}>
+
+          <div className='detail'>
+            {logo && <div className='logo'>{logo}</div>}
+            <div className='main'>
+              <div className='row'>
+                {title && <h1 className='title'>{title}</h1>}
+                {action && <div className='action'>{action}</div>}
+              </div>
+              <div className='row'>
+                {content && <div className='content'>{content}</div>}
+                {extraContent && <div className='extraContent'>{extraContent}</div>}
+              </div>
             </div>
           </div>
+          {tabList &&
+          tabList.length &&
+          <Tabs className='tabs'
+            {...activeKeyProps}
+            onChange={this.onChange}
+            tabBarExtraContent={tabBarExtraContent}
+          >{tabList.map(item => <TabPane tab={item.tab} key={item.key} />)}
+          </Tabs>
+          }
         </div>
-        {tabList &&
-          tabList.length && (
-            <Tabs
-              className='tabs'
-              {...activeKeyProps}
-              onChange={this.onChange}
-              tabBarExtraContent={tabBarExtraContent}
-            >
-              {tabList.map(item => <TabPane tab={item.tab} key={item.key} />)}
-            </Tabs>
-          )}
       </div>
     )
   }

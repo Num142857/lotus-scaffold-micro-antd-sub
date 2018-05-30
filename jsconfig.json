@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
-        "experimentalDecorators": true,
-        "allowJs": true
+        // "experimentalDecorators": true,
+        // "noLib": true,
+        // "target": "es6",
+        // "checkJs": true,
         
     }
 }

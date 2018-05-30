@@ -4,6 +4,14 @@
 process.env.BABEL_ENV = 'development'
 process.env.NODE_ENV = 'development'
 
+// 配置切换
+let config = require('../config/webpack.config.dev')
+let microConfig = require('../config/webpack.config.dev.micro')
+
+if (process.env.DEV_ENV === 'micro') {
+  process.env.NODE_ENV = 'production'
+  config = microConfig
+}
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
@@ -28,7 +36,7 @@ const {
 } = require('react-dev-utils/WebpackDevServerUtils')
 const openBrowser = require('react-dev-utils/openBrowser')
 const paths = require('../config/paths')
-const config = require('../config/webpack.config.dev')
+
 const createDevServerConfig = require('../config/webpackDevServer.config')
 
 const useYarn = fs.existsSync(paths.yarnLockFile)
@@ -40,7 +48,7 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 8893
 const HOST = process.env.HOST || '0.0.0.0'
 
 if (process.env.HOST) {
@@ -55,7 +63,6 @@ if (process.env.HOST) {
     `If this was unintentional, check that you haven't mistakenly set it in your shell.`
   )
   console.log(`Learn more here: ${chalk.yellow('http://bit.ly/2mwWSwH')}`)
-  console.log()
 }
 
 // We attempt to use the default port but if it is busy, we offer the user to

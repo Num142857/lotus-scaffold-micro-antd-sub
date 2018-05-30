@@ -12,7 +12,6 @@ const getClientEnvironment = require('./env')
 const paths = require('./paths')
 const packageConfig = require('../package.json')
 // import { join, resolve } from 'path'
-// console.log()
 let theme = {}
 if (packageConfig.theme && typeof (packageConfig.theme) === 'string') {
   let cfgPath = packageConfig.theme
@@ -105,7 +104,8 @@ module.exports = {
       Util: path.resolve(__dirname, '../src/utils/'),
       Components: path.resolve(__dirname, '../src/components/'),
       Assets: path.resolve(__dirname, '../src/assets/'),
-      Constant: path.resolve(__dirname, '../src/constant/')
+      Constant: path.resolve(__dirname, '../src/constant/'),
+      Common: path.resolve(__dirname, '../src/common/')
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -113,7 +113,7 @@ module.exports = {
       // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
-      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson, paths.mock]),
     ],
   },
   module: {
@@ -138,7 +138,7 @@ module.exports = {
             loader: require.resolve('eslint-loader'),
           },
         ],
-        include: paths.appSrc,
+        include: [paths.appSrc, paths.mock],
       },
       {
         // "oneOf" will traverse all following loaders until one will
@@ -159,7 +159,7 @@ module.exports = {
           // Process JS with Babel.
           {
             test: /\.(js|jsx|mjs)$/,
-            include: paths.appSrc,
+            include: [paths.appSrc, paths.mock],
             loader: require.resolve('babel-loader'),
             options: {
               plugins: [

@@ -6,13 +6,13 @@ import { ContainerQuery } from 'react-container-query'
 import DocumentTitle from 'react-document-title'
 import classNames from 'classnames'
 import NotFound from '../routes/Exception/404'
-import { getRoutes } from '../utils/utils'
+import { getRoutes, getRoutesExtension } from '../utils/utils'
 import { getMenuData } from '../common/menu'
 import SiderMenu from 'Components/SiderMenu/'
 import GlobalHeader from 'Components/GlobalHeader'
 import { enquireScreen, unenquireScreen } from 'enquire-js'
 import './BasicLayout.less'
-import logo from '../assets/logo.svg'
+import logo from '../assets/logo.png'
 // import Authorized from '../utils/Authorized'
 const { Header, Sider, Content } = Layout
 // const { AuthorizedRoute, check } = Authorized
@@ -76,152 +76,168 @@ const getBreadcrumbNameMap = (menuData, routerData) => {
 }
 
 export default class BasicLayout extends React.PureComponent {
-    state = {
-      collapsed: false,
-      isMobile: false
-    };
-    static childContextTypes = {
-      location: PropTypes.object,
-      breadcrumbNameMap: PropTypes.object,
-    };
-    getChildContext() {
-      const { location, routerData } = this.props
-      return {
-        location,
-        breadcrumbNameMap: getBreadcrumbNameMap(getMenuData(), routerData),
-      }
+  state = {
+    collapsed: false,
+    isMobile: false
+  };
+  static childContextTypes = {
+    location: PropTypes.object,
+    breadcrumbNameMap: PropTypes.object,
+  };
+  getChildContext() {
+    const { location, routerData } = this.props
+    return {
+      location,
+      breadcrumbNameMap: getBreadcrumbNameMap(getMenuData(), routerData),
     }
+  }
 
-    componentDidMount() {
-      this.enquireHandler = enquireScreen(mobile => {
-        this.setState({
-          isMobile: mobile,
-        })
+  componentDidMount() {
+    this.enquireHandler = enquireScreen(mobile => {
+      this.setState({
+        isMobile: mobile,
       })
+    })
+  }
+  componentWillUnmount() {
+    // 判断是否为手机
+    unenquireScreen(this.enquireHandler)
+  }
+  getPageTitle() {
+    const { routerData, location } = this.props
+    const { pathname } = location
+    let title = '招采管理系统'
+    if (routerData[pathname] && routerData[pathname].name) {
+      title = `${routerData[pathname].name} - 招采管理系统`
     }
-    componentWillUnmount() {
-      // 判断是否为手机
-      unenquireScreen(this.enquireHandler)
+    return title
+  }
+  getBashRedirect = () => {
+    // According to the url parameter to redirect
+    // 这里是重定向的,重定向到 url 的 redirect 参数所示地址
+    const urlParams = new URL(window.location.href)
+
+    const redirect = urlParams.searchParams.get('redirect')
+    // Remove the parameters in the url
+    if (redirect) {
+      urlParams.searchParams.delete('redirect')
+      window.history.replaceState(null, 'redirect', urlParams.href)
+    } else {
+      const { routerData } = this.props
+      // get the first authorized route path in routerData
+      // const authorizedPath = Object.keys(routerData).find(
+      //   item => check(routerData[item].authority, item) && item !== '/'
+      // )
+      // return authorizedPath
+      return '/project/notice/list'
     }
-    getPageTitle() {
-      const { routerData, location } = this.props
-      const { pathname } = location
-      let title = '微前端-antd'
-      if (routerData[pathname] && routerData[pathname].name) {
-        title = `${routerData[pathname].name} - 微前端-antd`
-      }
-      return title
+    return redirect
+  };
+  handleMenuCollapse = collapsed => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+    })
+  };
+
+  render() {
+    const {
+      fetchingNotices,
+      notices,
+      routerData,
+      match,
+      location,
+    } = this.props
+
+    const currentUser = {
+      name: 'Serati Ma',
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+      userid: '00000001',
+      notifyCount: 12,
     }
-    getBashRedirect = () => {
-      // According to the url parameter to redirect
-      // 这里是重定向的,重定向到 url 的 redirect 参数所示地址
-      const urlParams = new URL(window.location.href)
+    const { collapsed } = this.state
+    const menus = getMenuData()
+    const bashRedirect = this.getBashRedirect()
+    function getExtensionRoute() {
+      let routeArr = getRoutesExtension(match.path, routerData).map(item => {
+        const a = (
+          <Route key={item.key}
+            path={item.path}
+            component={item.component}
+            exact
+          />
 
-      const redirect = urlParams.searchParams.get('redirect')
-      // Remove the parameters in the url
-      if (redirect) {
-        urlParams.searchParams.delete('redirect')
-        window.history.replaceState(null, 'redirect', urlParams.href)
-      } else {
-        const { routerData } = this.props
-        // get the first authorized route path in routerData
-        // const authorizedPath = Object.keys(routerData).find(
-        //   item => check(routerData[item].authority, item) && item !== '/'
-        // )
-        // return authorizedPath
-        return '/'
-      }
-      return redirect
-    };
-        handleMenuCollapse = collapsed => {
-          this.setState({
-            collapsed: !this.state.collapsed,
-          })
-        };
+        )
 
-        render() {
-          const {
-            fetchingNotices,
-            notices,
-            routerData,
-            match,
-            location,
-          } = this.props
-          const currentUser = {
-            name: 'Serati Ma',
-            avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-            userid: '00000001',
-            notifyCount: 12,
-          }
-          const { collapsed } = this.state
-          const menus = getMenuData()
-          const bashRedirect = this.getBashRedirect()
-          let layout = (
-            <Switch>
-              {getRoutes(match.path, routerData).map(item => (
-                <Route key={item.key}
-                  path={item.path}
-                  component={item.component}
-                  exact={item.exact}
-                />
+        return a
+      })
+      // let routeClip
+      // routeArr.forEach(v => {
+      //   routeClip += v
+      // })
+      // return routeClip
+      return routeArr
+    }
+    let RouterSwitch = (
+      <Switch>
+        {getRoutes(match.path, routerData).map(item => (
+          <Route key={item.key}
+            path={item.path}
+            // component={item.component}
+            render={(props) => {
+              let Item = item.component
 
-              ))}
-              <Redirect exact from='/' to={bashRedirect} />
-              <Route render={NotFound} />
-            </Switch>
-          )
+              return <Item {...props} routerData={routerData} />
+            }}
+            exact={item.exact}
+          />
 
-          // 开发模式显示菜单
-          if (process.env.NODE_ENV === 'development') {
-            layout = (
-              <Layout>
-                <SiderMenu
-                  menuData={getMenuData()}
-                  collapsed={collapsed}
-                  location={location}
-                  onCollapse={this.handleMenuCollapse}
-                />
-                <Layout >
-                  <Header style={{ padding: 0 }}>
-                    <GlobalHeader
-                      logo={logo}
-                      currentUser={currentUser}
-                      fetchingNotices={fetchingNotices}
-                      notices={notices}
-                      collapsed={collapsed}
-                      isMobile={this.state.isMobile}
-                      onNoticeClear={this.handleNoticeClear}
-                      onCollapse={this.handleMenuCollapse}
-                      onMenuClick={this.handleMenuClick}
-                      onNoticeVisibleChange={this.handleNoticeVisibleChange}
-                    />
-                  </Header>
-                  <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: '100vh' }}>
-                    <Switch>
-                      {getRoutes(match.path, routerData).map(item => (
-                        <Route key={item.key}
-                          path={item.path}
-                          component={item.component}
-                          exact={item.exact}
-                        />
-                      ))}
-                      <Redirect exact from='/' to={bashRedirect} />
-                      <Route render={NotFound} />
-                    </Switch>
-                  </Content>
-                </Layout>
-              </Layout>
-            )
-          }
+        ))}
+        <Redirect exact from='/' to={bashRedirect} />
+        <Route render={NotFound} />
+      </Switch>
+    )
+    let layout = RouterSwitch
+    // 开发模式显示菜单
+    if (process.env.NODE_ENV === 'development' && !MICRO) {
+      layout = (
+        <Layout>
+          <Header style={{ padding: 0 }}>
+            <GlobalHeader
+              logo={logo}
+              currentUser={currentUser}
+              fetchingNotices={fetchingNotices}
+              notices={notices}
+              collapsed={collapsed}
+              isMobile={this.state.isMobile}
+              onNoticeClear={this.handleNoticeClear}
+              onCollapse={this.handleMenuCollapse}
+              onMenuClick={this.handleMenuClick}
+              onNoticeVisibleChange={this.handleNoticeVisibleChange}
+            />
+          </Header>
+          <Layout >
+            <SiderMenu
+              menuData={getMenuData()}
+              collapsed={collapsed}
+              location={location}
+              onCollapse={this.handleMenuCollapse}
+            />
+            <Content style={{ margin: '0 16px', minHeight: '100vh' }}>
+              {RouterSwitch}
+            </Content>
+          </Layout>
+        </Layout>
+      )
+    }
 
-          return (
-            <DocumentTitle title={this.getPageTitle()}>
-              <ContainerQuery query={query}>
-                {params => {
-                  return <div className={classNames(params)}>{layout}</div>
-                }}
-              </ContainerQuery>
-            </DocumentTitle>
-          )
-        }
+    return (
+      <DocumentTitle title={this.getPageTitle()}>
+        <ContainerQuery query={query}>
+          {params => {
+            return <div className={classNames(params)}>{layout}</div>
+          }}
+        </ContainerQuery>
+      </DocumentTitle>
+    )
+  }
 }

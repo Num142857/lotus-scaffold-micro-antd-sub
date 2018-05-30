@@ -1,0 +1,7 @@
+{
+    "name": "bidding-admin-submodule",
+    "path": ["/project"],
+    "prefix": "/bidding-admin-submodule/",
+    "main": "/bidding-admin-submodule/main.js",
+    "store": "/bidding-admin-submodule/store.js"
+  }
