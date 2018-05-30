@@ -1,7 +1,7 @@
 {
   "name": "lotus-scaffold-micro-antd-sub",
   "scaffold": "lotus-scaffold-micro-antd-sub",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "bin": {
     "lotus-scaffold-micro-antd-sub": "_lotus/bin/index.js"
   },

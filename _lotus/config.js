@@ -4,6 +4,7 @@ module.exports = {
     'public/',
     'scripts/',
     'src/',
+    'mock/',
     'package.json',
     '.eslintrc.js',
     'jsconfig.json',
